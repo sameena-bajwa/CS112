@@ -1,0 +1,35 @@
+/* File: StringTest.java
+ * Author: Wayne Snyder
+ * Date: January 27th, 2016
+ * Purpose: This is a template for HW02, Problem B.1 (Lab problem)
+ */
+
+
+import java.util.Scanner;
+
+public class StringTest { 
+  
+  public static void main(String[] args) {
+    
+    // Print out welcome message
+    
+    System.out.println("\nWelcome to the String Test Program!");
+    System.out.println("Demonstrate various features of the String Library");
+    
+    // Define a scanner for user input
+    
+    Scanner userInput = new Scanner(System.in);
+    
+
+    System.out.println("\nType in a sentence or Control-d to end:"); 
+    while(userInput.hasNextLine()) {
+       String line = userInput.nextLine();
+       line = line.replace(",", "");
+       System.out.println("\"" + line + "\""); 
+    }
+    System.out.println("bye!");
+ 
+    
+  }
+  
+}

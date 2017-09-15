@@ -1,0 +1,40 @@
+/* File: PalindromeTest.java
+ * Author: Sameena Bajwa
+ * Date: January 30th 2016
+ * Purpose: This program will test if an inputted word or sentence is a palindrome.
+ */
+
+
+import java.util.Scanner;
+
+
+public class PalindromeTest { 
+  
+  public static void main(String[] args) {
+    
+    // Print out welcome message
+    System.out.println("\nWelcome to the Palindrome Test Program!");
+       
+    // Define a scanner for user input
+    Scanner userInput = new Scanner(System.in);
+    
+    System.out.println("\nType in a sentence to be tested or Control-d to end:"); 
+    
+    // Converts inputted string to an all lower-cased string
+    String lowerInput = userInput.toLowerCase();
+    
+    // Checks every character in the string for white space and punctuation marks
+    for (int i = 0 ; i != lowerInput.length() ; i ++) {
+        
+        // Removes white space
+        if (Character.isWhitespace( lowerInput.charAt(i) ) == true) {
+            lowerInput = lowerInput.replace(" ", "");
+        }
+        System.out.println(lowerInput);
+            
+ 
+    
+  }
+  
+  }
+}

@@ -1,0 +1,19 @@
+/* File: Histogram.java
+ * Author: Sameena Bajwa
+ * Date: February 1, 2016
+ * Purpose: Asks users for numbers and prints a histogram of the inputs
+*/
+
+import java.util.Scanner;
+
+public class Histogram {
+
+    public static void printHeading{
+        
+        System.out.println("Welcome to the Histogram program!");
+        System.out.println("This program will print out a histogram of the numbers");
+    }
+}
+
+                               
+                               

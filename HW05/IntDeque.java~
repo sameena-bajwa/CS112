@@ -1,0 +1,251 @@
+/* File: IntDeque.java
+ * Date: 2/19/2016
+ * Author:  Sameena Bajwa
+ * Class: CS 112, Spring 2016
+ * Purpose: Create an IntDeque abstract data type using the circular-buffer
+ * technique
+ */
+
+public class IntDeque {
+    
+    private final int SIZE = 10;
+    
+    private int [] A = new int [SIZE];
+    
+    private int length = SIZE;
+    
+    private int front = 0;
+    
+    private int next = 0;
+    
+    private int size = 0;
+    
+    // Insert a new int at the front of the queue
+    
+    public void enqueueFront(int k) {
+        
+    }
+    
+    // Remove int at the front of the queue and return it
+    
+    public int dequeueFront() throws QueueUnderflowException {
+        
+        // if the queue is empty, throw to the underflow exception
+        if (isEmpty() == true) {
+            
+            throw new QueueUnderflowException();
+        }
+        
+        ++ front;
+        -- size;
+        return A[front - 1];
+        
+    }
+    
+    //Insert a new int at the rear of the queue
+    
+    public void enqueueRear(int k) {
+        
+        if (next >= SIZE) 
+            resize();
+        
+        ++size;
+        // push int k to the end of the queue
+        A[next ++] = k;
+    }
+    
+    public void resize() {
+        
+        final int RESIZE = SIZE * 2;
+        int [] B = new int [RESIZE];
+        
+        for (int i = front; i < RESIZE; i ++) {
+            if (i < SIZE) {
+                B[i] = A[front];
+                front = nextSlot(front);
+            }
+            else {
+                B[i] = 0;
+            }
+            
+        }
+        
+        next = next % 10;
+        
+        
+        A = B;
+        
+        
+        
+        
+        
+    }
+    
+    // Call next slot of the array
+    
+    public int nextSlot(int k) {
+        
+        return ((k + 1) % 10);
+    }
+    
+    // Call previous slot of the array 
+    
+    public int previousSlot(int k) {
+        
+        if (k == 0) {
+            return ( 9 % 10);
+        }
+        return ((k - 1) % 10);
+    }
+        
+    // Remove the int at the rear of the queue and return it
+    
+    public int dequeueRear() {
+        return 1;
+    }
+    
+    // Return number of ints being stored in the queue
+    
+    public int size() {
+        
+        return size;
+    }
+    
+    // Return true if the queue is empty, false otherwise
+    
+    public boolean isEmpty() {
+        
+        if (next == front) {
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    // Return string representation of the deque
+    
+    public String toString() {
+        String s = "[";
+        
+        for(int i = SIZE  - 1; i >= 0; --i) {
+            
+            // if the element is the first element, do not add a comma afterwards
+            
+            if (i == 0) {
+                
+                s += A[i];
+            }
+            else {
+                s += A[i] + ", ";
+            }
+        }
+        
+        
+        s += "]  length: " + length + "  size: " + size() + "  front: " + front + "  next: " + next;
+
+        return s; 
+    }
+        
+    
+    // Unit Test (you must complete this with additonal tests as indicated)
+    
+    public static void main(String[] args) {
+        
+        try {
+            IntDeque D = new IntDeque(); 
+            
+            System.out.println("\n[1] First test toString on empty dequeue... Should print out:"); 
+            System.out.println("[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  length: 10  size: 0  front: 0  next: 0"); 
+            System.out.println(D); 
+            
+            System.out.println("\n[2] Test size and isEmpty... Should print out:\n0  true"); 
+            System.out.println(D.size() + "  " + D.isEmpty()); 
+            
+            System.out.println("\n[3] Test enqueueRear.... Should print out:"
+                                   + "\n[0, 0, 0, 0, 0, 0, 4, 3, 2, 1]  length: 10  size: 4  front: 0  next: 4");
+            D.enqueueRear(1); 
+            D.enqueueRear(2);
+            D.enqueueRear(3); 
+            D.enqueueRear(4);
+            
+            System.out.println(D); 
+            
+            System.out.println("\n[4] Test size and isEmpty again... Should print out:\n4  false"); 
+            System.out.println(D.size() + "  " + D.isEmpty()); 
+            
+            System.out.println("\n[5] Test dequeueFront.... Should print out:"
+                                   + "\nn = 1  m = 3");
+            int n = D.dequeueFront(); 
+            D.dequeueFront();  
+            int m = D.dequeueFront(); 
+            System.out.println("n = " + n + "  m = " + m); 
+            
+            System.out.println("\n[6] And should print out:"
+                                   + "\n[0, 0, 0, 0, 0, 0, 4, 3, 2, 1]  length: 10  size: 1  front: 3  next: 4");
+            System.out.println(D); 
+            
+            
+            System.out.println("\n[7] Test wrap-around of enqueueRear .... Should print out:"
+                                   + "\n[10, 9, 8, 7, 6, 5, 4, 13, 12, 11]  length: 10  size: 10  front: 3  next: 3");
+            
+            for(int i = 5; i < 14; ++i)
+                D.enqueueRear(i);
+            
+            System.out.println(D); 
+            
+            System.out.println("\n[8] Test wrap-around of dequeueFront .... Should print out:"
+                                   + "\n[10, 9, 8, 7, 6, 5, 4, 13, 12, 11]  length: 10  size: 0  front: 3  next: 3  m = 13");
+            
+            for(int i = 0; i < 9; ++i)
+                D.dequeueFront();
+            m = D.dequeueFront(); 
+            
+            System.out.println(D + "  m = " + m); 
+        }
+        
+        // Write some temporary tests to make sure that previousSlot(...) works properly; test it especially
+        // to make sure that it returns the correct value when you call previousSlot( 0 ). 
+        // Delete these test after you are sure that this method works. 
+        
+        // Test 9: Test enqueue front by inserting several numbers in front and printing out the queue
+        
+        // Test 10: Test the size and isempty again
+        
+        // Test 11: Test dequeue rear by removing some elements, printing them out, and printing the queue
+        
+        // Test 12: test wrap-around of enqueue rear and dequeue front by enqueueing several elements in 
+        //          rear until it goes past gap between ends of the array. 
+        
+        
+        // Test 13: Test all four methods together by alternately removing and adding from both ends
+        //          and print out the queue to make sure it worked. 
+        
+        // Test 14: Test size to make sure it works with all four
+        
+        // Test 15: test resizing by inserting enough elements to trigger a resize to size 20 and print out
+        
+        // Test 16: test that enqueue and dequeue (all four) work after resize by alternately removing and adding from both ends
+        //          and print out the queue to make sure it worked.
+        
+        // Test 17: Test size to make sure it works after the resize
+
+        // Test 18: Test exceptions by removing all elements from queue and then doing one more
+        //          dequeueRear and showing how it prints out a message 
+        
+        // Test 19: Do the same for dequeueFront
+        
+        // Strong suggestion for tests 18 and 19: Put a try block around the whole main method
+        // up to and including test 18, and then you can make sure that test 18 is correct; then
+        // put a separate try block around test 19. It is important to test each of these separately
+        // and you can't do that if you use only one try block for the whole main method. 
+      
+        catch (QueueUnderflowException e) {
+            
+            // when the exception is caught, print that the stack underflew
+            
+            System.out.println("Stack Underflew!");
+    }
+}
+
+}
