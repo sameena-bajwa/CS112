@@ -1,0 +1,121 @@
+Sameena Bajwa
+Homework 9 - Part A
+CS112
+
+1. Keys that caused the tree to split were 4, 19, 6, 12. List of keys in the tree: 4, 10 19, 25
+
+
+2.
+
+i) There will be three comparisons to find the key 10
+
+ii) There will be six comparisons to find the key 140
+
+iii) There will be four comparisons to find the key 60
+
+iv) The keys 50 and 90 will take the minimum number of comparisons. They'll each take two comparisons to compare with each other and themselves, since they are both in the root node.
+
+v) They keys 100, 110, 130, and 140 would take the maximum number of comparisons, which is six.
+
+vi) Total number of comparisons: 2 + 2 + 3 + 3 + 4 + 4 + 4 + 5 + 5 + 4 + 4 + 6 + 6 + 6 + 6 + 5
+70 / 16 = 4.375
+
+3. 
+   12
+  4  8 
+ 3
+
+A = [12, 4, 8, 3]
+n = 15
+
+   12
+  4  8
+ 3
+A = [12, 4, 8, 3]
+
+m = 12
+   8
+  7  5
+ 3 4
+
+A = [8, 7, 5, 3, 4]
+
+k = 14
+
+n = 15, m = 12, k = 14
+
+4.
+
+0 | | 
+1 | | 
+2 | | - > "diapers" 
+3 | | - > "eggs" - > "beer"
+4 | | 
+5 | | - > "apples"
+6 | | - > "bread"
+
+
+The worst-case number of comparisons is 2 (beer). The average-case number of comparisons is 6/5 or 1.2. 
+
+0 | | - > "sugar" - > "chicken"
+1 | | 
+2 | | - > "diapers"
+3 | | - > "flour"
+4 | | 
+5 | | - > "apples" - > "beef"
+6 | | 
+
+The worst-case number of comparisons is 2 (chicken and beef). The average-case number of comparisons is 7/6 or 1.167. 
+
+The following sequence of keys would all hash to the same location for a table of size 7: 7, 14, 21, 28 because all of these numbers can be evenly divided by 7, so they would end up in the same index of 0. 
+
+Inserting M keys into a hash table with N buckets, creating a worse-case table, would result in the worst-case time complexity of O(N).
+
+If the keys were inserted in the best possible way, then the worst-case lookup time is O(1). 
+
+5.
+
+0 | | 
+1 | | - 4
+2 | | 
+3 | | - 1
+4 | |
+5 | | 
+6 | | - 2
+7 | | - 28
+8 | |
+9 | |
+10| |
+
+Worst-case lookup time is 1.
+
+0 | | 
+1 | | - 4
+2 | | - 63 
+3 | | - 1
+4 | | - 23
+5 | | - 19
+6 | | - 2
+7 | | - 28
+8 | | - 13
+9 | |
+10| |
+
+Worst-case look up time is 4 because 19 was supposed to be in index 2 but it was taken by 63 and index 3 and 4 were also filled, so it was placed in index 5. 
+
+The average-case lookup time is 11/8 or 1.375
+
+
+0 | | 
+1 | | - 4
+2 | | - 63 
+3 | | 
+4 | | - 5
+5 | | - 19
+6 | | - 2
+7 | | - 28
+8 | | - 13
+9 | |
+10| |
+
+The worst-case lookup time is theta(N)

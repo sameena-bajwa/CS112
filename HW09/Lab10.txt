@@ -1,0 +1,26 @@
+Sameena Bajwa
+CS112 
+Lab 10
+
+Exercise One:
+
+All of the hash functions except for Silly performed well and around the same level. I did not need industrial-strength hash functions; the numbers they produced were very similar to the hash functions tested out prior. The hash funciton that performed the best while taking into account its simplicity was Naive Add.
+
+Exercise Two:
+
+A) The mean look up cost increased 1.5 times its original value and the standard deviation increased 3 times its original value. The sum will be larger if we are essentially doubling the value of the numerator. The lengths of the buckets will be larger, so it will take a longer to search for the desired value.
+
+B)  The mean look up cost increased by an even larger factor, as did the standard deviation. The bucket lengths are in a range from 42-62. This is why it would take so long for the search to look up the desired value, and why the mean look up cost incereased by so much.
+
+C) I tried a few different combinations of prime numbers and found that the hash function performed relatively well for all of them. The mean lookup cost was always close to the optimal look up cost and the standard deviation was low. The reason is prime numbers are the simplest to divide by because all other numbers are products of primes. The bucket lengths are not as high and the range from the min to max does not vary as much, therefore the function performs better. 
+
+Exercise Three: 
+
+A) Because each string was just a permutation of each other, they all ended up in the same bucket since the hash function returned the same value for them all.
+
+B) The strings once again ended up in one bucket, for the same reason as in A. Although the values of M and the LC Multiplier were different, the relationship remained the same. 
+
+C) The industrial-strength hash functions performed better than Add Lin Cong
+
+
+

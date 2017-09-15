@@ -1,0 +1,375 @@
+/* File Name: Graph.java
+ * Authors: Sameena Bajwa (sbajwa@bu.edu) and Nathan Weinberg (nathansw@bu.edu)
+ * Purpose: Act as class blueprint for any Graph object in SimGame.java
+ * Date: April 29, 2016
+ * CS112 - Final Project
+ */
+
+
+
+public class Graph {
+       
+    // constant variable that stores number of vertices 
+    public static final int N = 6;
+    
+    // counter for the connectEdges array
+    public int counter;
+    
+    // array to keep track of vertices that are part of a cycle
+    public int[] connectedEdges; 
+    
+    // 2D array to act as board representation
+    public int[][] board;
+     
+    // Constructor for new Graph object; initializes new board
+    // Note: This N is for the constructor, yet it is not the same
+    // as the N used for the class methods 
+    public Graph(int N) {  
+        
+        // 0 = no edge; 1 = red edge; -1 = blue edge          
+        board = new int[N][N];
+       
+    }
+    
+    // Prints out the edge matrix
+    public void printEdges() {     
+        
+        // prints length-wise scale
+        for(int k = 0; k < N; ++k)  
+            
+            System.out.printf("\t" + k);  
+        
+        System.out.println();
+        
+        // prints remainder of rows
+        for(int i = 0; i < N; ++i) {
+            
+            System.out.println();
+            System.out.printf(i + ":" + "\t");  
+            
+            for(int j = 0; j < N; ++j) {
+                
+                System.out.printf(board[i][j] + "\t");        
+                
+            }        
+            
+            System.out.println();
+            
+        }
+    }
+    
+    // Add an edge from vertex u to v with value w 
+    public void addEdge(int u, int v, int w) {    
+        
+        board[u][v] = w;
+        board[v][u] = w;       
+        
+    }    
+    
+    // Remove the edge from u to v and duplicate edge from v to u 
+    public void removeEdge(int u, int v) {    
+         
+        board[u][v] = 0;
+        board[v][u] = 0;    
+        
+    }
+    
+    // Returns the value (-1, 0, or 1) of the edge that goes from u to v
+    public int getEdge(int u, int v) {   
+        
+        return board[u][v];
+        
+    }
+    
+    // Returns true or false depending on whether there is an edge from u to v
+    public boolean isEdge(int u, int v) {
+        
+        return (board[u][v] != 0);
+        
+    }
+    
+    // Returns the number of edges of either color connected to vertex v
+    public int degree(int v) {    
+        
+        int count = 0;       
+        
+        for(int i = 0; i < N; ++i) {    
+            
+            // if the space of the board is not blank, increment count
+            if (board[v][i] != 0 )                    
+                count ++;   
+            
+        }            
+        
+        return count;
+        
+    }
+    
+    
+    // Returns the number of edges of color w connected to vertex v
+    public int degree(int v, int w) {
+        
+        int count = 0;       
+        
+        for(int i = 0; i < N; ++i) {       
+            
+            // if the space on the board is equal to the color w
+            if (board[v][i] == w )                    
+                count ++;
+            
+        }      
+        
+        return count;    
+        
+    }
+      
+    // Returns true iff there is a cycle of length n among edges of color w
+    public boolean isCycleOfLength(int n, int w) {        
+        
+        for (int i = 0; i < N; ++ i) {
+            
+            // array and counter must be reset every time the cycleHelper function is called from here
+            connectedEdges = new int[N];
+            counter = 0;
+            
+            if (isCycleHelper (i, i, n, w) == true) 
+                
+                return true;
+
+        }
+        
+        return false;
+        
+    }
+       
+    // Helper function that will return true iff there is a path of length n 
+    // from u to v, connected only with edge of color w
+    private boolean isCycleHelper (int u, int v, int n, int w) {
+        
+        // if n is on its last move of the cycle
+        if (n == 1) {          
+            
+            // if there is an edge of color w between u and the first vertex of the cycle, return true
+            if (getEdge (u, connectedEdges[0]) == w) 
+                
+                return true;           
+            
+            else          
+                
+                return false;           
+            
+        }
+        
+        // Iterate through the hexagon 
+        for (int i = 0; i < N; ++ i) {
+            
+            if ( i != u && (getEdge(v, i) == w) ) { 
+                
+                // place value of i (vertex with an edge w) inside the connectedEdges array for further reference 
+                connectedEdges[counter] = i;
+                counter ++;
+
+                return isCycleHelper (i, v, --n, w);
+                 
+            }
+
+        }
+        
+        return false;
+       
+    }
+
+    
+    public static void main(String[] args) {
+     
+        // Unit Tests
+               
+        Graph G = new Graph(N);
+        
+        System.out.println("Testing printEdges...\n"
+                               + "Should be blank matrix (all 0's)\n");
+        G.printEdges();
+        System.out.println();
+        
+        System.out.println("Testing addEdge...\n"
+                               + "Should be matrix given in homework assignment\n");
+        
+        G.addEdge(1, 4, 1);
+        G.addEdge(2, 3, 1);
+        G.addEdge(2, 5, 1);
+        G.addEdge(0, 1, -1);
+        G.addEdge(0, 2, -1);
+        G.addEdge(0, 3, -1);
+        
+        G.printEdges();
+        System.out.println();
+      
+        System.out.println("Testing removeEdge...\n"
+                               + "Should be a blank matrix\n");
+        G.removeEdge(1, 4);
+        G.removeEdge(2, 3);
+        G.removeEdge(2, 5);
+        G.removeEdge(0, 1);
+        G.removeEdge(0, 2);
+        G.removeEdge(0, 3);
+        
+        G.printEdges();
+        System.out.println();
+        
+        System.out.println("Testing getEdge...\n"
+                               + "Should be \n-1\n0\n1\n");        
+        G.addEdge(1, 4, 1);
+        G.addEdge(2, 3, 1);
+        G.addEdge(2, 5, 1);
+        G.addEdge(0, 1, -1);
+        G.addEdge(0, 2, -1);
+        G.addEdge(0, 3, -1);
+        
+        System.out.println(G.getEdge(0, 1));
+        System.out.println(G.getEdge(0, 0));
+        System.out.println(G.getEdge(1, 4));
+        System.out.println();
+        
+        System.out.println("Testing isEdge...\n"
+                               + "Should be true");
+        System.out.println(G.isEdge(1, 4));
+        System.out.println();
+        
+        System.out.println("Testing isEdge...\n"
+                               + "Should be false");       
+        System.out.println(G.isEdge(0, 0));
+        System.out.println();
+        
+        System.out.println("Testing degree...\n"
+                               + "Should be 3");         
+        System.out.println(G.degree(2));
+        
+        System.out.println("\nTesting degree...\n"
+                               + "Should be 1");        
+        System.out.println(G.degree(4));
+                     
+        System.out.println("\nTesting degree of colors ...\n"
+                               + "Should be 1");         
+        System.out.println(G.degree(1, -1));
+        
+        System.out.println("\nTesting degree of colors ...\n"
+                               + "Should be 2");         
+        System.out.println(G.degree(2, 1));
+        
+                System.out.println("\nFirst Round of Tests for isCycleOfLength");
+        
+        System.out.println("\nTesting isCycleOfLength for blue edges ...\n"
+                               + "Adding a blue edge to create a triangle\nShould be true");        
+        G.addEdge(1, 2, -1);        
+        System.out.println(G.isCycleOfLength(3, -1));
+        
+        System.out.println("\nTesting isCycleOfLength for red edges ...\n"
+                               + "Should be false");        
+        System.out.println(G.isCycleOfLength(3, 1));
+        
+        System.out.println("\nNow adding a red edge to create a triangle");
+        G.addEdge(3, 5, 1);
+        
+        System.out.println("Testing isCycleOfLength for red edges ...\n"
+                               + "Should be true");        
+        System.out.println(G.isCycleOfLength(3, 1));
+        
+        
+        System.out.println("\nNow removing the newly added red edge, and adding" 
+                               + " two different red edges to create a larger triangle");
+        G.removeEdge(3, 5);
+        G.addEdge(4, 5, 1);
+        G.addEdge(1, 5, 1);
+        
+        System.out.println("Testing isCycleOfLength for red edges ...\n"
+                               + "Should be true");        
+        System.out.println(G.isCycleOfLength(3, 1));
+        
+        System.out.println("\nSecond Round of Tests for isCycleOfLength\n");
+        
+        Graph H = new Graph(N);
+        
+        H.addEdge(0, 1, 1);
+        H.addEdge(1, 2, 1);
+        H.addEdge(0, 2, 1);
+
+        System.out.println("Testing isCycleOfLength for new graph; created red edge triangle...\n"
+                               + "Should be true");        
+        System.out.println(H.isCycleOfLength(3, 1));
+        
+        System.out.println("\nTesting for blue triangle...\n"
+                               + "Should be false");
+        
+        System.out.println(H.isCycleOfLength(3, -1));
+        
+        System.out.println("\nRemoving one red edge");
+        System.out.println("Replacing same edge with a blue edge\n");
+        
+        H.removeEdge(0, 2);
+        H.addEdge(0, 2, -1);
+        H.printEdges();
+        
+         //triangle is present but consists of different colored edges
+        System.out.println("\nTesting for triangle of both colors...\n"
+                               + "Should be false x2");
+        
+        System.out.println("\nRed triangle:");
+        System.out.println(H.isCycleOfLength(3, 1));       
+        System.out.println("\nBlue triangle:");
+        System.out.println(H.isCycleOfLength(3, -1));
+        
+        H.removeEdge(0, 2);
+        
+        System.out.println("\nRemoved most recently added edge");
+        System.out.println("\nTesting for no triangle of either color...\n"
+                               + "Should be false x2");
+        System.out.println("\nRed triangle:");
+        System.out.println(H.isCycleOfLength(3, 1));
+        System.out.println("\nBlue triangle:");
+        System.out.println(H.isCycleOfLength(3, -1));
+        
+        H.removeEdge(0, 1);
+        H.removeEdge(2, 1);
+        H.addEdge(0, 1, -1);
+        H.addEdge(1, 2, -1);
+        H.addEdge(0, 2, -1);
+        
+        System.out.println("\nAdding a blue triangle");
+        System.out.println("\nTesting isCycleOfLength for blue edge triangle...\n"
+                               + "Should be true");        
+        System.out.println(H.isCycleOfLength(3, -1));
+        
+        System.out.println("\nTesting for red triangle...\n"
+                               + "Should be false");
+        System.out.println(H.isCycleOfLength(3, 1));
+        
+        System.out.println("\nThird Round of Tests for isCycleOfLength\n");
+        
+        Graph I = new Graph(N);
+        
+        I.addEdge (1, 5, 1);
+        I.addEdge (1, 2, -1);
+        I.addEdge (1, 4, 1);
+        I.addEdge (1, 0, -1);
+        I.addEdge (4, 3, 1);
+        I.addEdge (2, 3, -1);
+        
+        System.out.println();
+        I.printEdges();
+        
+        System.out.println("\nTesting isCycleOfLength for blue edge triangle...\n"
+                               + "Should be false");        
+        System.out.println(I.isCycleOfLength(3, -1));
+        
+        System.out.println("\nTesting for red triangle...\n"
+                               + "Should be false");
+        System.out.println(I.isCycleOfLength(3, 1));
+        
+        
+
+
+        
+        
+    }
+    
+}

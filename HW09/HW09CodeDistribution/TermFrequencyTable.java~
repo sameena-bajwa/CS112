@@ -1,0 +1,299 @@
+/*
+ * Author: Sameena Bajwa (sbajwa@bu.edu)
+ * Date: April 16, 2016
+ * Assignment: Calculating cosine similarity with respect to words of a document
+ * 
+*/
+
+
+public class TermFrequencyTable {
+    
+    // constructor for bucket nodes
+    
+    private class Node {
+        
+        String term;
+        int [] termFreq = new int [2];
+        Node next;
+        
+        public Node (String t, Node n) {
+            
+            this.term = t;
+            this.next = n;
+        }
+        
+        public Node (String t) {
+            
+            this.term = t;
+            this.next = null;
+        }
+    } 
+    
+    private final static int SIZE = 97;
+    
+    public int numTerms;
+    
+    private Node[] T = new Node [SIZE];
+
+    // code based off website given in assignment, hash function for strings
+   
+   public static int hash(String term) {
+       
+       char ch [] = term.toCharArray();
+       int termLength = term.length();
+       
+       int i;
+       int sum;
+       
+       for (i = 0, sum = 0; i < termLength; ++i) 
+           
+           sum += ch[i];
+       return sum % SIZE;
+   }
+   
+   public boolean member (String term) {
+       
+       return memberHelper (term, T[hash(term)]);
+   }
+   
+   private boolean memberHelper(String term, Node p) {
+       
+       if (p == null) 
+           
+           return false;
+       
+       else if (term.compareTo(p.term) == 0) 
+           
+           return true;
+       
+       else 
+           
+           return memberHelper (term, p.next);
+   }
+   
+   public void insert (String term, int docNum) {
+       
+       String [] terms = term.split(" ");
+       
+       for (int i = 0; i < terms.length; ++ i) {
+
+           
+           T[hash(terms[i])] = insert (terms[i], docNum, T[hash(terms[i])]);
+       }
+   }
+   
+   // insert helper function
+   
+   private Node insert (String term, int docNum, Node p) {
+       
+       if (member (term) == true) {
+           
+           p.termFreq [docNum] ++;
+           return p;
+       }
+       
+       else if (p == null) {
+           
+           numTerms ++;
+           
+           // code based off assignment description
+           
+           Node q = new Node (term);
+           q.termFreq[docNum] = 1;
+           return q;
+       }
+       
+       else {
+           
+           p.next = insert (term, docNum, p.next);
+           return p;
+       }
+   }
+   
+   public double cosineSimilarity () {
+       
+       double numerator = numeratorFinder ();
+       
+       double denominatorA = denominatorFinderA();
+       
+       double denominatorB = denominatorFinderB();
+       
+       // similarity equation to find cosine value
+       
+       double similarity = numerator / ( Math.sqrt (denominatorA) * Math.sqrt (denominatorB));
+       
+       return similarity;
+   }
+   
+   public double numeratorFinder () {
+       
+       int numSum = 0;
+       
+       for (int i = 0; i < T.length; ++ i) {
+           
+           if (T[i] != null) {
+               numSum += numeratorHelper (T[i]);
+           }
+       }
+       
+       return numSum;
+   }
+   
+   private double numeratorHelper (Node p) {
+       
+       return (p.termFreq[0] * p.termFreq[1]);
+   }
+   
+   public double denominatorFinderA () {
+       
+       int denProductA = 0;
+       int document = 0;
+       
+       for (int i = 0; i < T.length; ++ i) {
+           
+           if (T[i] != null) {
+               denProductA += denominatorHelper (T[i], document);
+           }
+       }
+       
+       return denProductA;
+   }
+   
+   public double denominatorFinderB () {
+       
+       int denProductB = 0;
+       int document = 1;
+       
+       for (int i = 0; i < T.length; ++ i) {
+           
+           if (T[i] != null) {
+           
+               denProductB += denominatorHelper (T[i], document);
+           }
+       }
+       
+       return denProductB;
+   }
+   
+   private double denominatorHelper (Node p, int docNum) {
+       
+       return (p.termFreq [docNum] * p.termFreq [docNum]);
+   }
+   
+   
+   
+   public static void main (String [] args ) {
+       
+       System.out.println ("This is a program that calculates the cosine similarity of two documents!");
+       System.out.println();
+       
+       // create a new term frequency table to test 
+       
+       TermFrequencyTable A = new TermFrequencyTable();
+       
+       System.out.println ("Test 1:\n");
+       
+       String term0 = "A B";
+       String term1 = "A A B B";
+       
+       System.out.println("Term frequency table A:\n");
+       System.out.println("Inserting: " + term0 + " and " + term1);
+       System.out.println();
+       
+       A.insert(term0, 0);
+       A.insert(term1, 1);
+       
+       System.out.println ("Cosine similarity should be 1.0");
+       
+       System.out.printf ("%.1f", A.cosineSimilarity());
+       System.out.println("\n");
+       
+       // create a new term frequency table to test 
+       
+       TermFrequencyTable B = new TermFrequencyTable();
+       
+       System.out.println("Test 2:\n");
+       
+       term0 = "A B";
+       term1 = "C D";
+       
+       System.out.println("Term frequency table B:\n");
+       System.out.println("Inserting: " + term0 + " and " + term1);
+       System.out.println();
+       
+       B.insert(term0, 0);
+       B.insert(term1, 1);
+       
+       System.out.println ("Cosine similarity should be 0.0");
+       
+       System.out.println (B.cosineSimilarity());
+       System.out.println();
+       
+       // create a new term frequency table to test 
+       
+       TermFrequencyTable C = new TermFrequencyTable();
+       
+       System.out.println("Test 3:\n");
+       
+       term0 = "CS112 HW10";
+       term1 = "CS112 HW10 HW10";
+       
+       System.out.println("Term frequency table C:\n");
+       System.out.println("Inserting: " + term0 + " and " + term1);
+       System.out.println();
+       
+       C.insert(term0, 0);
+       C.insert(term1, 1);
+       
+       System.out.println ("Cosine similarity should be 0.9487");
+       
+       System.out.printf ("%.4f", C.cosineSimilarity());
+       System.out.println();
+       
+
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+   }
+}
+       
+                               
+                               
+       
+       
+   
+
+   
+   
+       
+       
+       
+       
+       
+       
+           
+           
+           
+           
+       
+       
+   
+   
+           
+           
+                                        
+           
+           
+   
+    
+    
